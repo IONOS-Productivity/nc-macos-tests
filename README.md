@@ -121,7 +121,7 @@ Leverage the **Appium Inspector** to explore the HiDrive Next UI and identify el
 
    * In the Inspector window under **Desired Capabilities**, paste the same capabilities you use in your `README.md`.
    * Make sure `platformName`, `bundleId`, etc. are all correct.
-![Demo: Appium Inspector screenshot](docs/assets/inspector-demo.png)
+![Demo: Appium Inspector screenshot](docs/inspector-demo.png)
 
 
 4. **Start a session**:
@@ -130,14 +130,14 @@ Leverage the **Appium Inspector** to explore the HiDrive Next UI and identify el
 
    * In the left-hand tree, you’ll see all UI elements.
    * Select an element to view its properties in the right-hand panel.
-![Demo: Appium Inspector screenshot](docs/assets/inspector-demo-2.png)
+![Demo: Appium Inspector screenshot](docs/inspector-demo-2.png)
 
 6. **Copy a locator**:
 
    * Under **Attributes**, find properties like `label`, `name`, `value`, `xpaths`, etc.
    * Right-click the desired attribute (e.g. `label` or `xpath`) and choose **Copy → Copy XPath** or **Copy Accessibility ID**.
 
-![Demo: Appium Inspector screenshot](docs/assets/inspector-demo-3.png)
+![Demo: Appium Inspector screenshot](docs/inspector-demo-3.png)
 7. **Insert the locator into your test script**:
    Paste the copied XPath or accessibility ID into your code, for example:
 
