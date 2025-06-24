@@ -30,22 +30,6 @@ Before running the tests, ensure you have the following installed on your system
 
 ---
 
-## Appium (Inspector) Capabilities
-
-Below is the JSON representation of the desired capabilities used by the test script:
-
-```json
-{
-  "platformName": "mac",
-  "appium:automationName": "mac2",
-  "appium:deviceName": "Mac",
-  "appium:bundleId": "com.ionos.hidrivenext.desktopclient",
-  "appium:args": ["--settings"],
-  "appium:noReset": true
-}
-```
-
----
 
 ## Installation
 
@@ -101,7 +85,22 @@ The script will:
 
 
 
+## Appium (Inspector) Capabilities
 
+Below is the JSON representation of the desired capabilities used by the test script:
+
+```json
+{
+  "platformName": "mac",
+  "appium:automationName": "mac2",
+  "appium:deviceName": "Mac",
+  "appium:bundleId": "com.ionos.hidrivenext.desktopclient",
+  "appium:args": ["--settings"],
+  "appium:noReset": true
+}
+```
+
+---
 
 ## Using the Appium Inspector
 
@@ -119,7 +118,7 @@ Leverage the **Appium Inspector** to explore the HiDrive Next UI and identify el
    ```
 3. **Configure the connection**:
 
-   * In the Inspector window under **Desired Capabilities**, paste the same capabilities you use in your `README.md`.
+   * In the Inspector window under **Desired Capabilities**, paste the Capabilities(JSON Representation).
    * Make sure `platformName`, `bundleId`, etc. are all correct.
 ![Demo: Appium Inspector screenshot](docs/inspector-demo.png)
 
