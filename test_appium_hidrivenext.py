@@ -47,30 +47,3 @@ finally:
     # 5) Session beenden
     driver.quit()
     print("🛑 Session beendet")
-
-
-
-
-
-
-"""
-
-JSON Representation für den Appium Inspector
-
-
-{
-  "platformName": "mac",
-  "appium:automationName": "mac2",
-  "appium:deviceName": "Mac",
-  "appium:bundleId": "com.ionos.hidrivenext.desktopclient",
-  "appium:args": [
-    "--settings"
-  ],
-  "appium:noReset": true
-}
-
-"""
-
-
-
-
