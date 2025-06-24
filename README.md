@@ -6,7 +6,9 @@ Automated Appium UI tests for the HiDrive Next macOS application using Python.
 
 ## Overview
 
-This repository contains a demo test script (`test_appium_hidrivenext.py`) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
+A demo test script (test_appium_hidrivenext.py) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
+
+Comprehensive instructions for installing and using the Appium Inspector to discover and copy reliable UI element locators.
 
 The test:
 
