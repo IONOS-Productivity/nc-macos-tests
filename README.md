@@ -62,7 +62,6 @@ Below is the JSON representation of the desired capabilities used by the test sc
    pip install -r requirements.txt
    ```
 
-   *(requirements.txt should list **\`\`** and any other required libraries)*
 
 3. \*\*Start the Appium server \*\*
 
