@@ -30,7 +30,7 @@ Before running the tests, ensure you have the following installed on your system
 
 ---
 
-## Appium Capabilities
+## Appium (Inspector) Capabilities
 
 Below is the JSON representation of the desired capabilities used by the test script:
 
@@ -98,32 +98,3 @@ The script will:
 * The corresponding Jira issue key is referenced in the Git commit message or Pull Request
 
 ---
-
-## File Structure
-
-```
-nc-macos-tests/
-├── README.md
-├── requirements.txt
-├── test_appium_hidrivenext.py
-└── logs/                # Test logs (generated at runtime)
-```
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/XYZ-123-description`
-3. Link the Jira issue key (`XYZ-123`) in your commit message
-4. Commit your changes
-5. Push: `git push -u origin feature/XYZ-123-description`
-6. Open a Pull Request into `developing`
-
-Please follow the Angular commit message format and reference Jira issues in your commits.
-
----
-
-## License
-
-Licensed under the MIT License. See [LICENSE](LICENSE) for details.
