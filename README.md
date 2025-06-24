@@ -154,9 +154,9 @@ These steps will help you generate reliable locators for your Appium tests.
 
 Choose one of the following installation methods:
 
-1. **Via Appium Desktop**
+1. **Via Appium Inspector**
 
-   * Download the latest Appium Desktop release from the [Appium Releases page](https://github.com/appium/appium-desktop/releases).
+   * Download the latest Appium Desktop release from the [Appium Releases page](https://github.com/appium/appium-inspector/releases).
    * Open the DMG and drag **Appium Inspector** into your Applications folder.
 
 2. **Via npm (Community Inspector)**
