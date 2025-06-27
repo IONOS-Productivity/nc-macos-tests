@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 # 1) GUI-Vorbereitung per Klicks
 pyautogui.click(3061+12, 0+12); time.sleep(0.4)     # App-Icon
 pyautogui.click(2855, 86);        time.sleep(0.4)   # Benutzer-Menü
-pyautogui.click(2857, 289);       time.sleuiep(1.0)   # Einstellungen öffnen
+pyautogui.click(2857, 289);       time.sleep(1.0)   # Einstellungen öffnen
 
 # 2) Appium-Session starten mit Inspector-Caps
 opts = AppiumOptions()
