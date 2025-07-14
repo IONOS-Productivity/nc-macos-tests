@@ -50,20 +50,25 @@ def click_when_ready(driver, xpath: str, description: str = "", timeout: int = 1
 # Aktuelle URL des vordersten Browsers holen (Safari oder Chrome)
 # --------------------------------------------------------------------------- #
 def get_frontmost_browser_url(timeout: int = 6, poll: float = .5) -> str:
-    applescript = r'''
-        on run
-            tell application "System Events"
-                set frontApp to name of first application process whose frontmost is true
+    applescript = '''
+    on run
+        tell application "System Events"
+            set frontApp to name of first application process whose frontmost is true
+        end tell
+        if frontApp is "Safari" then
+            tell application "Safari"
+                return URL of front document
             end tell
-            if frontApp is "Safari" then
-                tell application "Safari" to return URL of front document
-            else if frontApp is "Google Chrome" then
-                tell application "Google Chrome" to return URL of active tab of front window
-            else
-                return ""
-            end if
-        end run
+        else if frontApp is "Google Chrome" then
+            tell application "Google Chrome"
+                return URL of active tab of front window
+            end tell
+        else
+            return ""
+        end if
+    end run
     '''
+
     start = time.time()
     while time.time() - start < timeout:
         url = subprocess.check_output(["osascript", "-e", applescript], text=True).strip()
