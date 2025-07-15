@@ -1,2 +1,6 @@
 .DS_Store
 ui_dump.xml
+.DS_Store
+
+# sensibler Login
+credentials.json
