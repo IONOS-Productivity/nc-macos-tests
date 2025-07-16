@@ -4,3 +4,6 @@ ui_dump.xml
 
 # sensibler Login
 credentials.json
+
+#avoiding unnecessary files
+chrome-debug-profile
