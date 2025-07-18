@@ -9,8 +9,6 @@ from typing import Tuple
 import pyautogui
 from appium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 # --------------------------------------------------------------------------- #
 # Package setup
@@ -21,6 +19,12 @@ if PACKAGE_ROOT not in sys.path:
 from TestplanHDNX.capabilities import Capabilities  # noqa: E402
 
 # --------------------------------------------------------------------------- #
+# Helper imports
+# --------------------------------------------------------------------------- #
+from TestplanHDNX.helpers.gui_coordinates import GuiCoordinates
+from TestplanHDNX.helpers.waits import Waits
+
+# --------------------------------------------------------------------------- #
 # Logging configuration
 # --------------------------------------------------------------------------- #
 logger = logging.getLogger(__name__)
@@ -29,15 +33,6 @@ handler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-
-# --------------------------------------------------------------------------- #
-# GUI Coordinate Constants
-# --------------------------------------------------------------------------- #
-class GuiCoordinates:
-    MENU_ICON = (3073, 12)
-    USER_DROPDOWN = (2860, 86)
-    SETTINGS_ITEM = (2865, 289)
-    CLICK_PAUSE = 0.3
 
 # --------------------------------------------------------------------------- #
 # PyAutoGUI Actions
@@ -70,15 +65,13 @@ class AppiumUtilities:
 
     def find_element(self, driver: webdriver.Remote, by: By, locator: str):
         logger.debug(f"Finding element by {by} with locator: {locator}")
-        return WebDriverWait(driver, self.timeout).until(
-            EC.presence_of_element_located((by, locator))
-        )
+        waits = Waits(driver, self.timeout)
+        return waits.until_present(by, locator)
 
     def click_when_ready(self, driver: webdriver.Remote, by: By, locator: str, desc: str = ""):
         logger.debug(f"Waiting for clickable element by {by}: {locator}")
-        elem = WebDriverWait(driver, self.timeout).until(
-            EC.element_to_be_clickable((by, locator))
-        )
+        waits = Waits(driver, self.timeout)
+        elem = waits.until_clickable(by, locator)
         elem.click()
         if desc:
             logger.info(f"✅ {desc}")
@@ -109,7 +102,6 @@ def parse_usage(text_label: str, text_value: str) -> Tuple[int, int, int]:
     total_gb = int(m_val.group(2).replace('.', '').replace(',', ''))
 
     return used_mb, percent_ui, total_gb
-
 
 def verify_quota_display(driver: webdriver.Remote, utils: AppiumUtilities) -> None:
     elem = utils.find_element(driver, By.XPATH, XPaths.QUOTA_USAGE)
