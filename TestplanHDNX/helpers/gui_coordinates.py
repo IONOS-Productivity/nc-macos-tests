@@ -1,4 +1,4 @@
-# TestplanHDNX/helpers/gui_coordinates.py
+# /Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/helpers/gui_coordinates.py
 
 class GuiCoordinates:
     """Zentrale Koordinaten für GUI-Interaktionen mit PyAutoGUI"""
