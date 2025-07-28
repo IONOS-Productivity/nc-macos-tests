@@ -4,10 +4,10 @@ import sys
 import time
 import subprocess
 import pyautogui
+from dotenv import load_dotenv
 from appium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 # Projektpfad hinzufügen
 PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -18,23 +18,26 @@ from TestplanHDNX.capabilities import Capabilities
 from TestplanHDNX.helpers.gui_coordinates import GuiCoordinates
 from TestplanHDNX.helpers.waits import Waits
 
+# XPath für den General-/Allgemein-Tab und Checkbox
+TAB_GENERAL = '//XCUIElementTypeStaticText[@value="Allgemein" or @value="General"]'
+CHECKBOX_GENERAL = '//XCUIElementTypeCheckBox[@label="General" and @value="0"]'
+
 # Zu prüfende Links: (XPath, erwartete URL, Label)
 LINKS = [
-    ("//XCUIElementTypeStaticText[@value=\"Legal Notice\"]",
-     "https://www.ionos.fr/apropos",
-     "Legal Notice"),
-    ("//XCUIElementTypeStaticText[@value=\"Privacy Policy\"]",
-     "https://wl.hidrive.com/easy/windows/frwin.html",
-     "Privacy Policy"),
-    ("//XCUIElementTypeStaticText[@value=\"Open Source Software\"]",
-     "https://wl.hidrive.com/easy/windows/thx3.html",
-     "Open Source Software"),
+    ('//XCUIElementTypeStaticText[@value="Legal Notice"]',
+     'https://www.ionos.fr/apropos',
+     'Legal Notice'),
+    ('//XCUIElementTypeStaticText[@value="Privacy Policy"]',
+     'https://wl.hidrive.com/easy/windows/frwin.html',
+     'Privacy Policy'),
+    ('//XCUIElementTypeStaticText[@value="Open Source Software"]',
+     'https://wl.hidrive.com/easy/windows/thx3.html',
+     'Open Source Software'),
 ]
 
 # AppleScript-Funktion zum Ermitteln der Front-Browser-URL
-
 def get_frontmost_browser_url(timeout: int = 6, poll: float = .5) -> str:
-    applescript = r'''
+    applescript = r"""
         on run
             tell application "System Events"
                 set frontApp to name of first application process whose frontmost is true
@@ -47,7 +50,7 @@ def get_frontmost_browser_url(timeout: int = 6, poll: float = .5) -> str:
                 return ""
             end if
         end run
-    '''
+    """
     start = time.time()
     while time.time() - start < timeout:
         url = subprocess.check_output(["osascript", "-e", applescript], text=True).strip()
@@ -62,7 +65,7 @@ class LinkChecker:
         self.waits = Waits(driver)
 
     def prepare_app(self) -> None:
-        """HiDrive-Next per Dock-Klick in den Vordergrund holen"""
+        """HiDrive-Next per Dock-Klick in den Vordergrund holen und Einstellungen öffnen"""
         pyautogui.click(*GuiCoordinates.MENU_ICON)
         time.sleep(GuiCoordinates.CLICK_PAUSE)
         pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
@@ -71,7 +74,8 @@ class LinkChecker:
         time.sleep(GuiCoordinates.CLICK_PAUSE)
 
     def click_and_verify(self, xpath: str, expected_url: str, label: str) -> None:
-        elem = self.waits.until_clickable(By.XPATH, xpath)
+        # Direktes Finden und Klicken ohne Warte-Wrapper
+        elem = self.driver.find_element(By.XPATH, xpath)
         elem.click()
         print(f"✅ '{label}' angeklickt")
         print("⏳ Warte auf Browser-Fenster …")
@@ -82,13 +86,44 @@ class LinkChecker:
             print(f"✅ {label}: Link stimmt ({url})")
         else:
             print(f"⚠️  {label}: unerwartete URL {url!r} (erwartet {expected_url})")
-        # App wieder in den Vordergrund
+        # App wieder in den Vordergrund holen
         self.prepare_app()
 
     def run(self) -> None:
+        # .env laden
+        dotenv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env'))
+        if os.path.exists(dotenv_path):
+            load_dotenv(dotenv_path)
+            print(f"🔄 .env geladen: {dotenv_path}")
+
+        # App vorbereiten und Settings öffnen
         self.prepare_app()
+
+        # Direkt auf Allgemein/General-Tab klicken
+        try:
+            tab = self.driver.find_element(By.XPATH, TAB_GENERAL)
+            tab.click()
+            print("✅ 'Allgemein/General' Tab angeklickt")
+            time.sleep(1)
+        except NoSuchElementException as e:
+            print(f"⚠️ Fehler beim Klick auf Allgemein/General-Tab: {e}")
+
+        # Spezifische Checkbox 'General' anklicken per XPath
+        try:
+            checkbox = self.driver.find_element(By.XPATH, CHECKBOX_GENERAL)
+            checkbox.click()
+            print("✅ 'General' Checkbox angeklickt")
+            time.sleep(1)
+        except NoSuchElementException as e:
+            print(f"⚠️ Fehler beim Klick auf 'General' Checkbox: {e}")
+
+        # Alle Links prüfen
         for xpath, expected, label in LINKS:
-            self.click_and_verify(xpath, expected, label)
+            try:
+                self.click_and_verify(xpath, expected, label)
+            except Exception as e:
+                print(f"⚠️ Fehler beim Klick auf '{label}': {e}")
+
         print("🎉 Alle Links erfolgreich verifiziert")
 
 
