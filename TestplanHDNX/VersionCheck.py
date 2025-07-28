@@ -23,7 +23,7 @@ PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if PACKAGE_ROOT not in sys.path:
     sys.path.insert(0, PACKAGE_ROOT)
 
-from capabilities import Capabilities        # dein Capability-Modul
+from TestplanHDNX.capabilities import Capabilities        # dein Capability-Modul
 from TestplanHDNX.helpers.gui_coordinates import GuiCoordinates
 from TestplanHDNX.helpers.waits import Waits
 
