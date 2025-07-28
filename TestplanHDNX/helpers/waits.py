@@ -1,4 +1,4 @@
-# TestplanHDNX/helpers/waits.py
+# /Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/helpers/waits.py
 
 import logging
 from appium.webdriver.webdriver import WebDriver
