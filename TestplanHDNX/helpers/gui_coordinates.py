@@ -8,3 +8,4 @@ class GuiCoordinates:
     CLICK_PAUSE = 3.3
     LOGOUT_ITEM = (3169, 204)
     USER_SELF_ITEM = (3076, 175)
+
