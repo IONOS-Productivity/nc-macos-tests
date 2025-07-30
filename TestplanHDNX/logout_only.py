@@ -9,6 +9,12 @@ Script, das ausschließlich den Logout über die run_native_logout()-Funktion au
 import sys
 from pathlib import Path
 
+import warnings
+from urllib3.exceptions import NotOpenSSLWarning
+
+warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
+
+
 # Projekt-Root (eine Ebene über dem aktuellen Verzeichnis) in den Python-Pfad aufnehmen
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
