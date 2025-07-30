@@ -86,9 +86,9 @@ LABEL_VERSION = lambda v: (
 
 def prepare_gui() -> None:
     """Bringt HiDrive in den Vordergrund & öffnet Einstellungsfenster via Klicks."""
-    pyautogui.click(*GuiCoordinates.MENU_ICON)
-    time.sleep(GuiCoordinates.CLICK_PAUSE)
-    pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
+    #pyautogui.click(*GuiCoordinates.MENU_ICON)
+    #time.sleep(GuiCoordinates.CLICK_PAUSE)
+    #pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
     time.sleep(GuiCoordinates.CLICK_PAUSE)
     pyautogui.click(*GuiCoordinates.SETTINGS_ITEM)
     time.sleep(GuiCoordinates.CLICK_PAUSE)
