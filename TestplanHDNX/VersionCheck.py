@@ -1,8 +1,5 @@
 # /Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/VersionCheck.py
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 # --------------------------------------------------------------------------- #
 # Imports & Setup
 # --------------------------------------------------------------------------- #
@@ -97,27 +94,14 @@ def prepare_gui() -> None:
 def start_appium_session():
     opts = Capabilities.get_options()
     driver = webdriver.Remote("http://localhost:4723", options=opts)
-    driver.implicitly_wait(8)
+    driver.implicitly_wait(1)
     return driver
-
-
-def safe_click(driver, xpath: str, label: str, timeout: int = 5) -> None:
-    """Klickt, falls Element innerhalb timeout erscheint; ignoriert sonst."""
-    waits = Waits(driver)
-    try:
-        elem = waits.until_clickable(By.XPATH, xpath)
-        elem.click()
-        print(f"✅ {label}")
-    except TimeoutException:
-        print(f"ℹ️  {label} nicht sichtbar – Schritt übersprungen")
 
 # --------------------------------------------------------------------------- #
 # Test 1 – Version prüfen
 # --------------------------------------------------------------------------- #
 def verify_app_version(driver, version: str = EXPECTED_VERSION) -> None:
-    """Navigiert zu Einstellungen → Allgemein und prüft Version-Label."""
-    safe_click(driver, MENU_SETTINGS, '"Einstellungen/Settings" geöffnet')
-    safe_click(driver, TAB_GENERAL,  '"Allgemein/General" geöffnet')
+    #Navigiert zu Einstellungen → Allgemein und prüft Version-Label.
 
     waits = Waits(driver)
     try:
