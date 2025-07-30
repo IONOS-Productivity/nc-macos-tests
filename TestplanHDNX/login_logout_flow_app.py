@@ -44,7 +44,7 @@ def run_appium_flow():
     1) Native HiDrive Next starten & Login-Button klicken via Appium & PyAutoGUI
     """
     print("\n" + "═" * 44)
-    print("             NATIVE LOGIN STEP             ")
+    print("🚀  NATIVE APP LOGIN STEP STARTED  🚀".center(44))
     print("═" * 44)
 
     pyautogui.click(3073, 12)
@@ -55,10 +55,10 @@ def run_appium_flow():
     driver.implicitly_wait(WAIT_SEC)
 
     driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]").click()
-    print("Native login button clicked")
+    print("✅  Native login button clicked")
 
     driver.quit()
-    print("Appium session closed")
+    print("🛑  Appium session closed")
 
 
 def run_selenium_flow():
@@ -66,7 +66,7 @@ def run_selenium_flow():
     2) Web-SSO-Login durchführen via Chrome Remote-Debugging
     """
     print("\n" + "═" * 44)
-    print("             WEB SSO LOGIN STEP            ")
+    print("🔷  WEB SSO LOGIN STEP STARTED  🔷".center(44))
     print("═" * 44)
 
     # a) alle Chrome-Prozesse killen
@@ -80,12 +80,12 @@ def run_selenium_flow():
         f"--remote-debugging-port={DEBUG_PORT}",
         f"--user-data-dir={debug_profile}"
     ])
-    print("Chrome restarted with remote debugging")
+    print("🚀  Chrome restarted with remote debugging")
     time.sleep(5)
 
     # Credentials laden
     if not CRED_PATH.is_file():
-        sys.exit(f"Missing credentials file: {CRED_PATH}")
+        sys.exit(f"❌  Missing credentials file: {CRED_PATH}")
     creds   = json.load(open(CRED_PATH, encoding="utf-8"))
     invalid = creds["invalid"]
     valid   = creds["valid"]
@@ -100,53 +100,58 @@ def run_selenium_flow():
     # auf das letzte Tab wechseln
     handles = driver.window_handles
     driver.switch_to.window(handles[-1])
-    print(f"Switched to SSO tab: {handles[-1]}")
+    print(f"🔀  Switched to SSO tab: {handles[-1]}")
 
     try:
-        # optional: "Anmelden"-Button klicken
+        # ① optional: "Anmelden"-Button klicken
         try:
             btn = wait.until(EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, "input.login.primary.icon-confirm-white")
             ))
             btn.click()
             time.sleep(1)
-            print("Login button clicked")
+            print("•  'Anmelden' button clicked")
         except TimeoutException:
-            print("No login button found, proceeding")
+            print("ℹ️  No 'Anmelden' button, proceeding")
 
-        # Invalid-Email-Test
-        print("Testing invalid email…")
+        # ② Invalid-Email-Test
+        print("→  Testing invalid email …")
         try:
-            elem = wait.until(EC.presence_of_element_located((By.ID, "username")))
-            elem.clear()
-            elem.send_keys(invalid["user"], Keys.ENTER)
+            user_field = wait.until(EC.presence_of_element_located((By.ID, "username")))
+            user_field.clear()
+            user_field.send_keys(invalid["user"], Keys.ENTER)
             wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".input-byline--error")))
-            print("Invalid login error displayed")
+            print("❌  Invalid login error displayed")
         except TimeoutException:
-            print("No error message for invalid email")
+            print("⚠️  No error message for invalid email")
 
-        # Valid-Login
-        print("Testing valid login…")
-        driver.find_element(By.ID, "username").clear()
-        driver.find_element(By.ID, "username").send_keys(valid["user"], Keys.ENTER)
-        driver.find_element(By.NAME, "password").clear()
-        driver.find_element(By.NAME, "password").send_keys(valid["pass"], Keys.ENTER)
-        print("Valid credentials submitted")
+        # ③ Valid-Login
+        print("→  Testing valid login …")
+        # Username-Feld erneut füllen
+        user_field = wait.until(EC.presence_of_element_located((By.ID, "username")))
+        user_field.clear()
+        user_field.send_keys(valid["user"], Keys.ENTER)
 
-        # optional: SSO Grant klicken
+        # Passwort-Feld warten und füllen
+        pwd_field = wait.until(EC.presence_of_element_located((By.NAME, "password")))
+        pwd_field.clear()
+        pwd_field.send_keys(valid["pass"], Keys.ENTER)
+        print("✅  Valid credentials submitted")
+
+        # ④ optional: SSO Grant klicken
         try:
             grant = wait.until(EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, "input.login.primary.icon-confirm-white[value='Zugriff gewähren']")
             ))
             grant.click()
-            print("SSO grant clicked")
+            print("🔓  'Zugriff gewähren' clicked")
             time.sleep(1)
         except TimeoutException:
-            print("No grant button found, proceeding")
+            print("ℹ️  No grant button, proceeding")
 
     finally:
         driver.quit()
-        print("Selenium session closed")
+        print("🛑  Selenium session closed")
 
 
 def run_appium_folder_selection():
@@ -154,7 +159,7 @@ def run_appium_folder_selection():
     3) Ordner-Auswahl im nativen HiDrive-Client durchführen
     """
     print("\n" + "═" * 44)
-    print("           FOLDER SELECTION STEP           ")
+    print("📁  FOLDER SELECTION STEP STARTED  📁".center(44))
     print("═" * 44)
 
     caps   = Capabilities.get_options()
@@ -175,15 +180,15 @@ def run_appium_folder_selection():
 
     el = driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]")
     driver.execute_script("macos: click", {"elementId": el.id})
-    print("Folder selection button clicked")
+    print("✅  Folder selection button clicked")
 
     driver.quit()
-    print("Appium session closed (folder selection)")
+    print("🛑  Appium session closed (folder selection)")
 
 
 if __name__ == "__main__":
     print("\n" + "═" * 44)
-    print("               LOGIN TEST STARTED              ")
+    print("🚀  LOGIN TEST FLOW STARTED  🚀".center(44))
     print("═" * 44)
 
     run_appium_flow()
@@ -191,5 +196,5 @@ if __name__ == "__main__":
     run_appium_folder_selection()
 
     print("\n" + "═" * 44)
-    print("         ✅ LOGIN TEST COMPLETED ✅         ")
+    print("✅  LOGIN TEST COMPLETED  ✅".center(44))
     print("═" * 44)
