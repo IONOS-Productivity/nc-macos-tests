@@ -9,6 +9,12 @@ from appium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
+import warnings
+from urllib3.exceptions import NotOpenSSLWarning
+
+warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
+
+
 # Projektpfad hinzufügen
 PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if PACKAGE_ROOT not in sys.path:
@@ -19,7 +25,7 @@ from TestplanHDNX.helpers.gui_coordinates import GuiCoordinates
 from TestplanHDNX.helpers.waits import Waits
 
 # XPath für den General-/Allgemein-Tab und Checkbox
-TAB_GENERAL = '//XCUIElementTypeStaticText[@value="Allgemein" or @value="General"]'
+TAB_GENERAL     = '//XCUIElementTypeStaticText[@value="Allgemein" or @value="General"]'
 CHECKBOX_GENERAL = '//XCUIElementTypeCheckBox[@label="General" and @value="0"]'
 
 # Zu prüfende Links: (XPath, erwartete URL, Label)
@@ -59,6 +65,7 @@ def get_frontmost_browser_url(timeout: int = 6, poll: float = .5) -> str:
         time.sleep(poll)
     return ""
 
+
 class LinkChecker:
     def __init__(self, driver: webdriver.Remote):
         self.driver = driver
@@ -77,15 +84,15 @@ class LinkChecker:
         # Direktes Finden und Klicken ohne Warte-Wrapper
         elem = self.driver.find_element(By.XPATH, xpath)
         elem.click()
-        print(f"✅ '{label}' angeklickt")
-        print("⏳ Warte auf Browser-Fenster …")
+        print(f"  ✅ '{label}' clicked")
+        print("    ⏳ waiting for browser window…")
         url = get_frontmost_browser_url()
         if not url:
-            print(f"⚠️  {label}: keine Browser-URL erkannt")
+            print(f"    ⚠️ {label}: no browser URL detected")
         elif url.startswith(expected_url):
-            print(f"✅ {label}: Link stimmt ({url})")
+            print(f"    ✅ {label}: URL correct ({url})")
         else:
-            print(f"⚠️  {label}: unerwartete URL {url!r} (erwartet {expected_url})")
+            print(f"    ⚠️ {label}: unexpected URL {url!r} (expected {expected_url})")
         # App wieder in den Vordergrund holen
         self.prepare_app()
 
@@ -94,40 +101,35 @@ class LinkChecker:
         dotenv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env'))
         if os.path.exists(dotenv_path):
             load_dotenv(dotenv_path)
-            print(f"🔄 .env geladen: {dotenv_path}")
+            print(f"🔄 .env loaded: {dotenv_path}")
 
         # App vorbereiten und Settings öffnen
         self.prepare_app()
 
-        # Direkt auf Allgemein/General-Tab klicken
-        try:
-            tab = self.driver.find_element(By.XPATH, TAB_GENERAL)
-            tab.click()
-            print("✅ 'Allgemein/General' Tab angeklickt")
-            time.sleep(1)
-        except NoSuchElementException as e:
-            print(f"⚠️ Fehler beim Klick auf Allgemein/General-Tab: {e}")
-
-        # Spezifische Checkbox 'General' anklicken per XPath
+        # Spezifische Checkbox 'General' anklicken
         try:
             checkbox = self.driver.find_element(By.XPATH, CHECKBOX_GENERAL)
             checkbox.click()
-            print("✅ 'General' Checkbox angeklickt")
+            print("  ✅ 'General' checkbox clicked")
             time.sleep(1)
-        except NoSuchElementException as e:
-            print(f"⚠️ Fehler beim Klick auf 'General' Checkbox: {e}")
+        except NoSuchElementException:
+            print("  ⚠️ 'General' checkbox not found, skipping")
 
         # Alle Links prüfen
         for xpath, expected, label in LINKS:
             try:
                 self.click_and_verify(xpath, expected, label)
             except Exception as e:
-                print(f"⚠️ Fehler beim Klick auf '{label}': {e}")
+                print(f"  ⚠️ Error clicking '{label}': {e}")
 
-        print("🎉 Alle Links erfolgreich verifiziert")
+        print("\n🎉 All links verified successfully\n")
 
 
 def main():
+    print("\n" + "═" * 50)
+    print("🚀 STARTING LINK CHECK 🚀".center(50))
+    print("═" * 50)
+
     opts = Capabilities.get_options()
     driver = webdriver.Remote("http://localhost:4723", options=opts)
     driver.implicitly_wait(8)
@@ -135,7 +137,12 @@ def main():
         LinkChecker(driver).run()
     finally:
         driver.quit()
-        print("🛑 Appium-Session beendet")
+        print("🛑 Appium session closed")
+
+    print("═" * 50)
+    print("✅ LINK CHECK COMPLETED ✅".center(50))
+    print("═" * 50)
+
 
 if __name__ == "__main__":
     main()

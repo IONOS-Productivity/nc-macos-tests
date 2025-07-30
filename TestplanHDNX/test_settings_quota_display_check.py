@@ -10,6 +10,12 @@ import pyautogui
 from appium import webdriver
 from selenium.webdriver.common.by import By
 
+import warnings
+from urllib3.exceptions import NotOpenSSLWarning
+
+warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
+
+
 # --------------------------------------------------------------------------- #
 # Package setup
 # --------------------------------------------------------------------------- #
