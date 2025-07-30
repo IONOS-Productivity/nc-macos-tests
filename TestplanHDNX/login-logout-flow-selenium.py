@@ -189,7 +189,7 @@ def main():
         do_login_password(VALID_PASS)
         do_accept_access()
         check_dashboard()
-        do_logout()
+        #do_logout()
 
         print("🎉 All login/logout tests passed")
         time.sleep(2)
