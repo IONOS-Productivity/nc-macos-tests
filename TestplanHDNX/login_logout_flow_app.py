@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# /Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
+
 """
-/Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
 
 End-to-end Test für Login & Logout mit Appium (native) und Selenium (Web),
 inklusive extra Klicks auf den "Anmelden"-Button im WebView, SSO-Grant
@@ -123,22 +122,16 @@ def run_selenium_flow():
 
         # ③ Valid-Login
         print("→ Testing valid login …")
-        try:
-            btn2 = wait.until(EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "input.login.primary.icon-confirm-white")
-            ))
-            btn2.click(); time.sleep(1)
-        except TimeoutException:
-            pass
-        try:
-            elem = wait.until(EC.presence_of_element_located((By.ID, "username")))
-            elem.clear()
-            elem.send_keys(valid["user"], Keys.ENTER)
-        except TimeoutException:
-            print("⚠️ Username-Feld nicht gefunden – Valid-Login evtl. unvollständig")
-        pwd_el = wait.until(EC.presence_of_element_located((By.NAME, "password")))
-        pwd_el.clear()
-        pwd_el.send_keys(valid["pass"], Keys.ENTER)
+        # ③ Valid-Login
+        print("→ Testing valid login …")
+        # Username überschreiben und ENTER
+        driver.find_element(By.ID, "username").clear()
+        driver.find_element(By.ID, "username").send_keys(valid["user"], Keys.ENTER)
+        # Passwort-Feld holen und ENTER
+        driver.find_element(By.NAME, "password").clear()
+        driver.find_element(By.NAME, "password").send_keys(valid["pass"], Keys.ENTER)
+        print("✅ Valid credentials eingegeben und abgeschickt")
+
 
         # ④ SSO Grant ("Zugriff gewähren") klicken
         try:
