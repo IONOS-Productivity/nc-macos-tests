@@ -6,7 +6,7 @@ Automated Appium UI Tests for HiDrive Next on macOS
 ---
 
 <p align="center">
-  <img src="https://www.ionos.de/newsroom/wp-content/uploads/2022/03/LOGO_IONOS_Blue_RGB-1.png" alt="IONOS logo" width="200" />
+  <img src="https://play-lh.googleusercontent.com/WOIyd0aEc6hMG4CFcJWOw4Lv5F7A8CKFyRn0kheGgk9umxuzLMIUv6ZwnQ_eV4Y4nVE=w240-h480-rw" alt="IONOS logo" width="200" />
   <br />
 </p>
 
