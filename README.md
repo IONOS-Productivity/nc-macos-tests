@@ -1,4 +1,4 @@
-# 🚦 nc-macos-tests
+# nc-macos-tests
 
 Automated Appium UI Tests for HiDrive Next on macOS  
 *End-to-end tests for a better HiDrive experience*
