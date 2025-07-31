@@ -65,9 +65,9 @@ EXPECTED_VERSION = (
 
 if not EXPECTED_VERSION:
     sys.exit(
-        "❌  HDNX_VERSION fehlt!\n"
-        "    Lege sie in einer .env im Repo-Root an, exportiere sie als Umgebungsvariable "
-        "oder übergib sie als erstes CLI-Argument."
+        "❌  HDNX_VERSION missing!\n"
+        "    Place it in a .env file at the repo root, export it as an environment variable "
+        
     )
 
 # --------------------------------------------------------------------------- #
