@@ -30,17 +30,16 @@ Comes with complete setup instructions for the Appium Inspector to identify stab
 
 ---
 ## 📑 Table of Contents
-1. [Prerequisites](#%EF%B8%8F-installation )  
-2. [Installation](#-installation)  
+1. [Prerequisites](#%EF%B8%8F-prerequisites)  
+2. [Installation](#%EF%B8%8F-installation)  
 3. [e2e Test Execution](#-e2e-test-execution)  
 4. [Usage](#-usage)  
-5. [Appium Inspector Guide](#-appium-inspector-guide)  
-6. [Configuration](#-configuration)  
-7. [Troubleshooting](#-troubleshooting)  
-8. [Contributing](#-contributing)  
-9. [License](#-license)
+5. [Appium Inspector Capabilities](#-appium-inspector-capabilities)  
+6. [Using the Appium Inspector](#using-the-appium-inspector)
+7. [Installing Appium Inspector](#installing-appium-inspector)  
+8. [Demo Test Execution](#demo-test-execution)  
+9. [Maintainer Notes](#-maintainer-notes)  
 
----
 
 ---
 
