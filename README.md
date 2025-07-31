@@ -1,23 +1,49 @@
 # nc-macos-tests
 
-Automated Appium UI tests for the HiDrive Next macOS application using Python.
+Automated Appium UI Tests for HiDrive Next on macOS  
+*End-to-end tests for a better HiDrive experience*
 
 ---
 
-## Overview
-
-A demo test script (test_appium_hidrivenext.py) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
-
-Comprehensive instructions for installing and using the Appium Inspector to discover and copy reliable UI element locators.
-
-The test:
-
-1. Launches the HiDrive Next app.
-2. Locates and clicks a target checkbox using its XPath.
+<p align="center">
+  <img src="https://play-lh.googleusercontent.com/WOIyd0aEc6hMG4CFcJWOw4Lv5F7A8CKFyRn0kheGgk9umxuzLMIUv6ZwnQ_eV4Y4nVE=w240-h480-rw" alt="IONOS logo" width="200" />
+  <br />
+</p>
 
 ---
 
-## Prerequisites
+## 📄 Overview
+This project provides a robust, automated UI test suite for the HiDrive Next macOS client.
+
+Built using **Python**, **Appium**, and **Selenium**, it validates:
+- Native macOS UI flows
+- Web-based login/logout
+- Folder navigation and selection
+- UI text and version display
+
+A sample script (`test_appium_hidrivenext.py`) demonstrates:
+1. Launching the HiDrive Next application
+2. Identifying a checkbox element via XPath and performing a click
+
+Comes with complete setup instructions for the Appium Inspector to identify stable UI selectors.
+
+
+---
+## 📑 Table of Contents
+1. [Prerequisites](#%EF%B8%8F-prerequisites)  
+2. [Installation](#%EF%B8%8F-installation)  
+3. [Maintainer Notes](#-maintainer-notes)  
+4. [e2e Test Execution](#-e2e-test-execution)  
+5. [Appium Inspector Capabilities](#-appium-inspector-capabilities)  
+6. [Using the Appium Inspector](#using-the-appium-inspector)
+7. [Installing Appium Inspector](#installing-appium-inspector)  
+8. [Demo Test Execution](#demo-test-execution)  
+
+
+
+---
+
+## ⚖️ Prerequisites
 
 Before running the tests, ensure you have the following installed on your system:
 
@@ -32,62 +58,101 @@ Before running the tests, ensure you have the following installed on your system
 
 ---
 
-
-## Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
-   cd nc-macos-tests
-   ```
-
-2. **Install Python dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-
-3. \*\*Start the Appium server \*\*
-
-   ```bash
-   appium
-   ```
-
----
-
-## Execution
-
-Run the demo test script with:
+## ⬆️ Installation
 
 ```bash
-python test_appium_hidrivenext.py
+# Clone the repo
+$ git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
+$ cd nc-macos-tests
+
+# Install dependencies
+$ pip install -r requirements.txt
+
+# Make scripts executable
+$ chmod +x run_all.sh
+$ chmod +x nc-macos-tests/TestplanHDNX/*.py
 ```
 
-The script will:
+Start Appium server:
+```bash
+appium
+```
 
-* Launch the HiDrive Next application
-* Connect via Appium
-* Click the checkbox located by the provided XPath
-* Exit without errors
+---
+## 📝 Maintainer Notes
+
+### 📊 `.env` – Environment Configuration
+
+The `.env` file is **required** to define the expected version of the HiDrive Next app for test validation.
+
+The version is automatically read by the `VersionCheck.py` script using one of the following methods:
+
+1. Environment variable `HDNX_VERSION`
+2. Command-line argument to the script
+3. `.env` file in the project root (**recommended**)
+
+If the version is missing, the script exits with:
+```
+❌  HDNX_VERSION missing!
+Place it in a .env file at the repo root, export it as an environment variable
+```
+
+
+**Example .env:**
+```env
+HDNX_VERSION=3.13.4
+```
+View the following file 
+[VIEW-.ENV-LINK](https://github.com/IONOS-Productivity/nc-macos-tests/blob/Dev/env.example)
+
+The `.env` must exist at the root level. If not set, the version check test will fail.
+
+- `credentials.json` stores test account login credentials (e.g., email and password) used for automated login flows. This file should never be committed to version control.
+- `.env` is used to configure environment variables such as paths, feature flags, or debug toggles required by the test scripts. Specifically, it defines which **HiDrive Next version** is being tested.
+
+- Rename `credentials-example.json` to `credentials.json` in the project root
+- ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**.
+
+![Demo: Usage screenshot](docs/useage.png)
+- If you have fewer icons or a different layout, **adjust the `pyautogui` coordinates** in the test scripts accordingly.
+
+
+---
+## 🌟 e2e Test Execution
+
+Run all tests:
+```bash
+./run_all.sh
+```
+
+Run a specific test:
+```bash
+python nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
+```
+
+Tests will:
+- Launch HiDrive Next app
+- Automate login/logout/folder operations
+- Emit structured logs with visual separators
 
 ---
 
-## Acceptance Criteria
 
-* `test_appium_hidrivenext.py` successfully launches HiDrive Next and clicks the target checkbox via the provided XPath
-* `README.md` exists at the repo root and clearly documents setup & execution steps
-* The test script runs without errors (assuming the Appium server is running)
-* The code contains docstrings and inline comments explaining each step
-* The corresponding Jira issue key is referenced in the Git commit message or Pull Request
+
+
+## ✅ Acceptance Criteria
+
+- Tests complete without error
+- Logs are clean, readable, and well-separated
+- `.env` file is parsed from root
+- All outputs include separators and status tags
 
 ---
 
 
 
 
-## Appium (Inspector) Capabilities
+## 🎨 Appium Inspector Capabilities
 
 Below is the JSON representation of the desired capabilities used by the test script:
 
@@ -169,8 +234,60 @@ After installation, launch the Inspector from your Applications folder or by run
 
 
 
+## Demo Test Execution
+
+Run the demo test script with:
+
+```bash
+python test_appium_hidrivenext.py
+```
+
+The script will:
+
+* Launch the HiDrive Next application
+* Connect via Appium
+* Click the checkbox located by the provided XPath
+* Exit without errors
+
+---
 
 
+<<<<<<< HEAD
 
+## 📝 Maintainer Notes
 
+### 📊 `.env` – Environment Configuration
 
+The `.env` file is **required** to define the expected version of the HiDrive Next app for test validation.
+
+The version is automatically read by the `VersionCheck.py` script using one of the following methods:
+
+1. Environment variable `HDNX_VERSION`
+2. Command-line argument to the script
+3. `.env` file in the project root (**recommended**)
+
+If the version is missing, the script exits with:
+```
+❌  HDNX_VERSION missing!
+Place it in a .env file at the repo root, export it as an environment variable
+```
+
+**Example .env:**
+```env
+HDNX_VERSION=3.13.4
+```
+
+The `.env` must exist at the root level. If not set, the version check test will fail.
+
+- `credentials.json` stores test account login credentials (e.g., email and password) used for automated login flows. This file should never be committed to version control.
+- `.env` is used to configure environment variables such as paths, feature flags, or debug toggles required by the test scripts. Specifically, it defines which **HiDrive Next version** is being tested.
+
+- Rename `credentials-example.json` to `credentials.json` in the project root
+- ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**.
+
+![Demo: Usage screenshot](docs/useage.png)
+- If you have fewer icons or a different layout, **adjust the `pyautogui` coordinates** in the test scripts accordingly.
+
+---
+=======
+>>>>>>> 1652efc (changed order)
