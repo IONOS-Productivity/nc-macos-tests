@@ -218,7 +218,7 @@ The script will:
 
 ## 📝 Maintainer Notes
 
-- Store credentials in `credentials.json` (in project root)
+- Copy `credentials-example.json` to `credentials.json` in the project root
 - HiDrive Next app must be visible during tests
 - Restart Appium or Chrome when debugging stalls
 
