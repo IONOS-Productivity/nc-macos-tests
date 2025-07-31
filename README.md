@@ -13,22 +13,38 @@ Automated Appium UI Tests for HiDrive Next on macOS
 ---
 
 ## 📄 Overview
+This project provides a robust, automated UI test suite for the HiDrive Next macOS client.
 
-Automated UI test suite for the HiDrive Next macOS client using Python, Appium, and Selenium. Covers native macOS UI flows, hybrid login screens, and general UI validations.
+Built using **Python**, **Appium**, and **Selenium**, it validates:
+- Native macOS UI flows
+- Web-based login/logout
+- Folder navigation and selection
+- UI text and version display
+
+A sample script (`test_appium_hidrivenext.py`) demonstrates:
+1. Launching the HiDrive Next application
+2. Identifying a checkbox element via XPath and performing a click
+
+Comes with complete setup instructions for the Appium Inspector to identify stable UI selectors.
 
 
- demo test script (test_appium_hidrivenext.py) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
-
-Comprehensive instructions for installing and using the Appium Inspector to discover and copy reliable UI element locators.
-
-The test:
-
-1. Launches the HiDrive Next app.
-2. Locates and clicks a target checkbox using its XPath.
+---
+## 📑 Table of Contents
+1. [Prerequisites](#-prerequisites)  
+2. [Installation](#-installation)  
+3. [e2e Test Execution](#-e2e-test-execution)  
+4. [Usage](#-usage)  
+5. [Appium Inspector Guide](#-appium-inspector-guide)  
+6. [Configuration](#-configuration)  
+7. [Troubleshooting](#-troubleshooting)  
+8. [Contributing](#-contributing)  
+9. [License](#-license)
 
 ---
 
-## ⚖️Prerequisites
+---
+
+## ⚖️ Prerequisites
 
 Before running the tests, ensure you have the following installed on your system:
 
@@ -202,3 +218,10 @@ The script will:
 
 
 
+## 📝 Maintainer Notes
+
+- Store credentials in `credentials.json` (in project root)
+- HiDrive Next app must be visible during tests
+- Restart Appium or Chrome when debugging stalls
+
+---
