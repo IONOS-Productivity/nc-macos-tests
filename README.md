@@ -30,7 +30,7 @@ Comes with complete setup instructions for the Appium Inspector to identify stab
 
 ---
 ## 📑 Table of Contents
-1. [Prerequisites](#-prerequisites)  
+1. [Prerequisites](#--prerequisites)  
 2. [Installation](#-installation)  
 3. [e2e Test Execution](#-e2e-test-execution)  
 4. [Usage](#-usage)  
