@@ -1,12 +1,23 @@
-# nc-macos-tests
+# 🚦 nc-macos-tests
 
-Automated Appium UI tests for the HiDrive Next macOS application using Python.
+Automated Appium UI Tests for HiDrive Next on macOS  
+*End-to-end tests for a better HiDrive experience*
 
 ---
 
-## Overview
+<p align="center">
+  <img src="https://www.ionos.de/newsroom/wp-content/uploads/2022/03/LOGO_IONOS_Blue_RGB-1.png" alt="IONOS logo" width="200" />
+  <br />
+</p>
 
-A demo test script (test_appium_hidrivenext.py) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
+---
+
+## 📄 Overview
+
+Automated UI test suite for the HiDrive Next macOS client using Python, Appium, and Selenium. Covers native macOS UI flows, hybrid login screens, and general UI validations.
+
+
+ demo test script (test_appium_hidrivenext.py) that verifies the basic functionality of the HiDrive Next desktop client on macOS via Appium.
 
 Comprehensive instructions for installing and using the Appium Inspector to discover and copy reliable UI element locators.
 
@@ -17,7 +28,7 @@ The test:
 
 ---
 
-## Prerequisites
+## ⚖️Prerequisites
 
 Before running the tests, ensure you have the following installed on your system:
 
@@ -32,62 +43,64 @@ Before running the tests, ensure you have the following installed on your system
 
 ---
 
-
-## Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
-   cd nc-macos-tests
-   ```
-
-2. **Install Python dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-
-3. \*\*Start the Appium server \*\*
-
-   ```bash
-   appium
-   ```
-
----
-
-## Execution
-
-Run the demo test script with:
+## ⬆️ Installation
 
 ```bash
-python test_appium_hidrivenext.py
+# Clone the repo
+$ git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
+$ cd nc-macos-tests
+
+# Install dependencies
+$ pip install -r requirements.txt
+
+# Make scripts executable
+$ chmod +x run_all.sh
+$ chmod +x nc-macos-tests/TestplanHDNX/*.py
 ```
 
-The script will:
-
-* Launch the HiDrive Next application
-* Connect via Appium
-* Click the checkbox located by the provided XPath
-* Exit without errors
-
----
-
-## Acceptance Criteria
-
-* `test_appium_hidrivenext.py` successfully launches HiDrive Next and clicks the target checkbox via the provided XPath
-* `README.md` exists at the repo root and clearly documents setup & execution steps
-* The test script runs without errors (assuming the Appium server is running)
-* The code contains docstrings and inline comments explaining each step
-* The corresponding Jira issue key is referenced in the Git commit message or Pull Request
+Start Appium server:
+```bash
+appium
+```
 
 ---
 
 
+## 🌟 e2e Test Execution
+
+Run all tests:
+```bash
+./run_all.sh
+```
+
+Run a specific test:
+```bash
+python nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
+```
+
+Tests will:
+- Launch HiDrive Next app
+- Automate login/logout/folder operations
+- Emit structured logs with visual separators
+
+---
 
 
-## Appium (Inspector) Capabilities
+
+
+## ✅ Acceptance Criteria
+
+- Tests complete without error
+- Logs are clean, readable, and well-separated
+- `.env` file is parsed from root
+- All outputs include separators and status tags
+
+---
+
+
+
+
+## 🎨 Appium Inspector Capabilities
 
 Below is the JSON representation of the desired capabilities used by the test script:
 
@@ -169,7 +182,22 @@ After installation, launch the Inspector from your Applications folder or by run
 
 
 
+## Demo Test Execution
 
+Run the demo test script with:
+
+```bash
+python test_appium_hidrivenext.py
+```
+
+The script will:
+
+* Launch the HiDrive Next application
+* Connect via Appium
+* Click the checkbox located by the provided XPath
+* Exit without errors
+
+---
 
 
 
