@@ -221,7 +221,8 @@ The script will:
 - Rename `credentials-example.json` to `credentials.json` in the project root
 - HiDrive Next app must be visible during tests
 - Restart Appium or Chrome when debugging stalls
-- ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**. See [`docs/useage.png`](docs/useage.png).
+- ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**.
+
 ![Demo: Usage screenshot](docs/useage.png)
 - If you have fewer icons or a different layout, **adjust the `pyautogui` coordinates** in the test scripts accordingly.
 
