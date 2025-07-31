@@ -218,7 +218,7 @@ The script will:
 
 ## 📝 Maintainer Notes
 
-- Copy `credentials-example.json` to `credentials.json` in the project root
+- Rename `credentials-example.json` to `credentials.json` in the project root
 - HiDrive Next app must be visible during tests
 - Restart Appium or Chrome when debugging stalls
 
