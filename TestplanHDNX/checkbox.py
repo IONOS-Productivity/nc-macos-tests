@@ -13,9 +13,7 @@ from selenium.common.exceptions import TimeoutException
 from TestplanHDNX.capabilities import Capabilities  # dein Capability-Modul
 from TestplanHDNX.helpers.waits import Waits
 
-# .env laden (unverändert)
-# ...
-
+# Appium-Session starten
 def start_appium_session():
     opts = Capabilities.get_options()
     driver = webdriver.Remote("http://localhost:4723", options=opts)
@@ -33,7 +31,40 @@ def click_launch_on_startup(driver):
     except TimeoutException:
         print("ℹ️  'Launch on system startup' nicht gefunden")
 
-# Version prüfen (unverändert)
+# Checkbox "Show server notifications" anklicken, falls vorhanden
+def click_show_server_notifications(driver):
+    xpath = "//*[@title='Show server notifications']"
+    waits = Waits(driver)
+    try:
+        elem = waits.until_present(By.XPATH, xpath)
+        elem.click()
+        print("✅ 'Show server notifications' angeklickt")
+    except TimeoutException:
+        print("ℹ️  'Show server notifications' nicht gefunden")
+
+# Checkbox "Automatically check for updates" anklicken, falls vorhanden
+def click_automatically_check_for_updates(driver):
+    xpath = "//*[@title='Automatically check for updates']"
+    waits = Waits(driver)
+    try:
+        elem = waits.until_present(By.XPATH, xpath)
+        elem.click()
+        print("✅ 'Automatically check for updates' angeklickt")
+    except TimeoutException:
+        print("ℹ️  'Automatically check for updates' nicht gefunden")
+
+# Checkbox "Analysis data collection for needs-based design" anklicken, falls vorhanden
+def click_analysis_data_collection_for_needs_based_design(driver):
+    xpath = "//*[@title='Analysis data collection for needs-based design']"
+    waits = Waits(driver)
+    try:
+        elem = waits.until_present(By.XPATH, xpath)
+        elem.click()
+        print("✅ 'Analysis data collection for needs-based design' angeklickt")
+    except TimeoutException:
+        print("ℹ️  'Analysis data collection for needs-based design' nicht gefunden")
+
+# Version prüfen
 def verify_app_version(driver, version: str):
     waits = Waits(driver)
     label_xpath = f"//XCUIElementTypeStaticText[@value='IONOS HiDrive Next {version}']"
@@ -46,13 +77,13 @@ def verify_app_version(driver, version: str):
         raise AssertionError(f"❌ Version-Label nicht gefunden! UI-Dump: {dump_path.resolve()}")
 
 if __name__ == "__main__":
-    # Einstellungen öffnen (pyautogui unverändert)
-    # prepare_gui()
-
-    # Appium-Session starten
+    # Appium starten und Tests durchführen
     driver = start_appium_session()
     try:
-        click_launch_on_startup(driver)       # Neuer Check & Klick
+        click_launch_on_startup(driver)
+        click_show_server_notifications(driver)
+        click_automatically_check_for_updates(driver)
+        click_analysis_data_collection_for_needs_based_design(driver)
         verify_app_version(driver, os.getenv("HDNX_VERSION") or (sys.argv[1] if len(sys.argv) > 1 else ""))
     finally:
         driver.quit()
