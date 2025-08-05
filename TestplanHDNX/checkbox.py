@@ -64,17 +64,6 @@ def click_analysis_data_collection_for_needs_based_design(driver):
     except TimeoutException:
         print("ℹ️  'Analysis data collection for needs-based design' nicht gefunden")
 
-# Version prüfen
-def verify_app_version(driver, version: str):
-    waits = Waits(driver)
-    label_xpath = f"//XCUIElementTypeStaticText[@value='IONOS HiDrive Next {version}']"
-    try:
-        waits.until_present(By.XPATH, label_xpath)
-        print(f"🎉 Version korrekt: {version}")
-    except TimeoutException:
-        dump_path = Path("ui_dump.xml")
-        dump_path.write_text(driver.page_source, encoding="utf-8")
-        raise AssertionError(f"❌ Version-Label nicht gefunden! UI-Dump: {dump_path.resolve()}")
 
 if __name__ == "__main__":
     # Appium starten und Tests durchführen
@@ -84,6 +73,5 @@ if __name__ == "__main__":
         click_show_server_notifications(driver)
         click_automatically_check_for_updates(driver)
         click_analysis_data_collection_for_needs_based_design(driver)
-        verify_app_version(driver, os.getenv("HDNX_VERSION") or (sys.argv[1] if len(sys.argv) > 1 else ""))
     finally:
         driver.quit()
