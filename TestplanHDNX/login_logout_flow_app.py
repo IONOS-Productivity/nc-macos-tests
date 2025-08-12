@@ -156,34 +156,43 @@ def run_selenium_flow():
 
 def run_appium_folder_selection():
     """
-    3) Ordner-Auswahl im nativen HiDrive-Client durchführen
+    3) Ordner-Auswahl im nativen HiDrive-Client durchführen (stabil über Button-Titel)
     """
     print("\n" + "═" * 44)
     print("📁  FOLDER SELECTION STEP STARTED  📁".center(44))
     print("═" * 44)
 
+    # Einziger Wahrheitsanker: exakter Button-Titel der Ordnerauswahl
+    FOLDER_BTN_TITLE = "Connect"
+
     caps   = Capabilities.get_options()
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
+    wait = WebDriverWait(driver, WAIT_SEC)
 
     try:
-        driver.execute_script(
-            "macos: activateApp",
-            {"bundleId": "com.ionos.hidrivenext.desktopclient"}
-        )
-    except Exception:
-        driver.execute_script(
-            "macos: launchApp",
-            {"bundleId": "com.ionos.hidrivenext.desktopclient"}
-        )
-    time.sleep(0.5)
+        # App nach vorne holen
+        try:
+            driver.execute_script(
+                "macos: activateApp",
+                {"bundleId": "com.ionos.hidrivenext.desktopclient"}
+            )
+        except Exception:
+            driver.execute_script(
+                "macos: launchApp",
+                {"bundleId": "com.ionos.hidrivenext.desktopclient"}
+            )
+        time.sleep(0.5)
 
-    el = driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]")
-    driver.execute_script("macos: click", {"elementId": el.id})
-    print("✅  Folder selection button clicked")
+        # Exakt den Ordner-Button klicken (kein Button[1] mehr)
+        sel = f"//XCUIElementTypeButton[@title='{FOLDER_BTN_TITLE}' or @name='{FOLDER_BTN_TITLE}']"
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, sel)))
+        btn.click()
+        print("✅  Folder selection button clicked (titelbasiert)")
+    finally:
+        driver.quit()
+        print("🛑  Appium session closed (folder selection)")
 
-    driver.quit()
-    print("🛑  Appium session closed (folder selection)")
 
 
 if __name__ == "__main__":
