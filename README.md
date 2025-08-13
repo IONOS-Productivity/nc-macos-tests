@@ -81,6 +81,14 @@ appium
 ---
 ## 📝 Maintainer Notes
 
+> **Note:**  
+> If the Appium Server (either the Inspector or the test scripts) becomes unresponsive, it might be due to an outdated version.  
+> You can update Appium to the latest version by running:  
+> ```bash
+> npm install --location=global appium@latest
+> ```
+
+
 ### 📊 `.env` – Environment Configuration
 
 The `.env` file is **required** to define the expected version of the HiDrive Next app for test validation.
