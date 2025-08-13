@@ -1,45 +1,44 @@
 # nc-macos-tests
 
-Automated Appium UI Tests for HiDrive Next on macOS  
+Automated Appium UI Tests for **HiDrive Next** on **macOS**
 *End-to-end tests for a better HiDrive experience*
 
----
-
 <p align="center">
-  <img src="https://play-lh.googleusercontent.com/WOIyd0aEc6hMG4CFcJWOw4Lv5F7A8CKFyRn0kheGgk9umxuzLMIUv6ZwnQ_eV4Y4nVE=w240-h480-rw" alt="IONOS logo" width="200" />
-  <br />
+  <img src="https://play-lh.googleusercontent.com/WOIyd0aEc6hMG4CFcJWOw4Lv5F7A8CKFyRn0kheGgk9umxuzLMIUv6ZwnQ_eV4Y4nVE=w240-h480-rw" alt="IONOS logo" width="160" />
 </p>
 
 ---
 
 ## 📄 Overview
-This project provides a robust, automated UI test suite for the HiDrive Next macOS client.
+
+This project provides a robust, automated UI test suite for the **HiDrive Next macOS** client.
 
 Built using **Python**, **Appium**, and **Selenium**, it validates:
-- Native macOS UI flows
-- Web-based login/logout
-- Folder navigation and selection
-- UI text and version display
+
+* Native macOS UI flows
+* Web-based login/logout
+* Folder navigation and selection
+* UI text and version display
 
 A sample script (`test_appium_hidrivenext.py`) demonstrates:
+
 1. Launching the HiDrive Next application
 2. Identifying a checkbox element via XPath and performing a click
 
-Comes with complete setup instructions for the Appium Inspector to identify stable UI selectors.
-
+Comes with complete setup instructions for the **Appium Inspector** to identify stable UI selectors.
 
 ---
+
 ## 📑 Table of Contents
-1. [Prerequisites](#%EF%B8%8F-prerequisites)  
-2. [Installation](#%EF%B8%8F-installation)  
-3. [Maintainer Notes](#-maintainer-notes)  
-4. [e2e Test Execution](#-e2e-test-execution)  
-5. [Appium Inspector Capabilities](#-appium-inspector-capabilities)  
-6. [Using the Appium Inspector](#using-the-appium-inspector)
-7. [Installing Appium Inspector](#installing-appium-inspector)  
-8. [Demo Test Execution](#demo-test-execution)  
 
-
+1. [⚖️ Prerequisites](#️-prerequisites)
+2. [⬆️ Installation](#️-installation)
+3. [📝 Maintainer Notes](#-maintainer-notes)
+4. [🌟 e2e Test Execution](#-e2e-test-execution)
+5. [🎨 Appium Inspector Capabilities](#-appium-inspector-capabilities)
+6. [🔎 Using the Appium Inspector](#using-the-appium-inspector)
+7. [📥 Installing Appium Inspector](#installing-appium-inspector)
+8. [▶️ Demo Test Execution](#demo-test-execution)
 
 ---
 
@@ -62,32 +61,34 @@ Before running the tests, ensure you have the following installed on your system
 
 ```bash
 # Clone the repo
-$ git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
-$ cd nc-macos-tests
+git clone https://github.com/IONOS-Productivity/nc-macos-tests.git
+cd nc-macos-tests
 
 # Install dependencies
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 
 # Make scripts executable
-$ chmod +x run_all.sh
-$ chmod +x nc-macos-tests/TestplanHDNX/*.py
+chmod +x run_all.sh
+chmod +x nc-macos-tests/TestplanHDNX/*.py
 ```
 
 Start Appium server:
+
 ```bash
 appium
 ```
 
 ---
+
 ## 📝 Maintainer Notes
 
-> **Note:**  
-> If the Appium Server (either the Inspector or the test scripts) becomes unresponsive, it might be due to an outdated version.  
-> You can update Appium to the latest version by running:  
+> **Note**
+> If the Appium Server (either the Inspector or the test scripts) becomes unresponsive, it might be due to an outdated version.
+> Update to the latest Appium with:
+>
 > ```bash
 > npm install --location=global appium@latest
 > ```
-
 
 ### 📊 `.env` – Environment Configuration
 
@@ -100,65 +101,64 @@ The version is automatically read by the `VersionCheck.py` script using one of t
 3. `.env` file in the project root (**recommended**)
 
 If the version is missing, the script exits with:
+
 ```
 ❌  HDNX_VERSION missing!
 Place it in a .env file at the repo root, export it as an environment variable
 ```
 
+**Example `.env`:**
 
-**Example .env:**
 ```env
 HDNX_VERSION=3.13.4
 ```
-View the following file 
+
+View the following file:
 [VIEW-.ENV-LINK](https://github.com/IONOS-Productivity/nc-macos-tests/blob/Dev/env.example)
 
-The `.env` must exist at the root level. If not set, the version check test will fail.
+The `.env` must exist at the **root level**. If not set, the version check test will fail.
 
-- `credentials.json` stores test account login credentials (e.g., email and password) used for automated login flows. This file should never be committed to version control.
-- `.env` is used to configure environment variables such as paths, feature flags, or debug toggles required by the test scripts. Specifically, it defines which **HiDrive Next version** is being tested.
-
-- Rename `credentials-example.json` to `credentials.json` in the project root
-- ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**.
+* `credentials.json` stores test account login credentials (e.g., email and password) used for automated login flows. This file should never be committed to version control.
+* `.env` is used to configure environment variables such as paths, feature flags, or debug toggles required by the test scripts. Specifically, it defines which **HiDrive Next version** is being tested.
+* Rename `credentials-example.json` to `credentials.json` in the project root.
+* ⚠️ Make sure your macOS status bar has **7 visible icons**, with the **HiDrive app icon on the far left**.
 
 ![Demo: Usage screenshot](docs/useage.png)
-- If you have fewer icons or a different layout, **adjust the `pyautogui` coordinates** in the test scripts accordingly.
 
+If you have fewer icons or a different layout, **adjust the `pyautogui` coordinates** in the test scripts accordingly.
 
 ---
+
 ## 🌟 e2e Test Execution
 
 Run all tests:
+
 ```bash
 ./run_all.sh
 ```
 
 Run a specific test:
+
 ```bash
 python nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
 ```
 
 Tests will:
-- Launch HiDrive Next app
-- Automate login/logout/folder operations
-- Emit structured logs with visual separators
+
+* Launch HiDrive Next app
+* Automate login/logout/folder operations
+* Emit structured logs with visual separators
 
 ---
-
-
-
 
 ## ✅ Acceptance Criteria
 
-- Tests complete without error
-- Logs are clean, readable, and well-separated
-- `.env` file is parsed from root
-- All outputs include separators and status tags
+* [ ] Tests complete without error
+* [ ] Logs are clean, readable, and well-separated
+* [ ] `.env` file is parsed from root
+* [ ] All outputs include separators and status tags
 
 ---
-
-
-
 
 ## 🎨 Appium Inspector Capabilities
 
@@ -186,33 +186,35 @@ Leverage the **Appium Inspector** to explore the HiDrive Next UI and identify el
    ```bash
    appium
    ```
+
 2. **Launch the Inspector**:
 
    ```bash
    appium-inspector
    ```
+
 3. **Configure the connection**:
 
-   * In the Inspector window under **Desired Capabilities**, paste the Capabilities(JSON Representation).
+   * In the Inspector window under **Desired Capabilities**, paste the Capabilities (JSON Representation).
    * Make sure `platformName`, `bundleId`, etc. are all correct.
-![Demo: Appium Inspector screenshot](docs/inspector-demo.png)
+     ![Demo: Appium Inspector screenshot](docs/inspector-demo.png)
 
-
-4. **Start a session**:
+4. **Start a session**
    Click **Start Session** to have Appium launch the HiDrive Next app on your Mac.
-5. **Browse the UI hierarchy**:
+
+5. **Browse the UI hierarchy**
 
    * In the left-hand tree, you’ll see all UI elements.
    * Select an element to view its properties in the right-hand panel.
-![Demo: Appium Inspector screenshot](docs/inspector-demo-2.png)
+     ![Demo: Appium Inspector screenshot](docs/inspector-demo-2.png)
 
-6. **Copy a locator**:
+6. **Copy a locator**
 
    * Under **Attributes**, find properties like `label`, `name`, `value`, `xpaths`, etc.
    * Right-click the desired attribute (e.g. `label` or `xpath`) and choose **Copy → Copy XPath** or **Copy Accessibility ID**.
+     ![Demo: Appium Inspector screenshot](docs/inspector-demo-3.png)
 
-![Demo: Appium Inspector screenshot](docs/inspector-demo-3.png)
-7. **Insert the locator into your test script**:
+7. **Insert the locator into your test script**
    Paste the copied XPath or accessibility ID into your code, for example:
 
    ```python
@@ -240,7 +242,7 @@ Choose one of the following installation methods:
 
 After installation, launch the Inspector from your Applications folder or by running:
 
-
+---
 
 ## Demo Test Execution
 
