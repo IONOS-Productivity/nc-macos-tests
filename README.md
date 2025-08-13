@@ -88,6 +88,15 @@ appium
 > npm install --location=global appium@latest
 > ```
 
+> **Tip**
+> For stable e2e runs, clear browser cookies/storage at **test start** so the SSO flow always begins unauthenticated.
+> • Alternatively, launch the browser with a **fresh temporary profile** for each run.
+
+> **Sign‑out at Test Start**
+> Start each test run **signed out** to prevent a leftover session from triggering an “Allow access” / consent window because you were already logged in.
+> • **Web (SSO):** clear cookies & site data or launch with a **fresh temporary profile** / private window.
+> • **HiDrive Next (native):** sign out via *Settings → Account → Sign Out* before running.
+> This ensures the SSO flow begins unauthenticated and avoids stalls on permission dialogs.
 
 ### 📊 `.env` – Environment Configuration
 
