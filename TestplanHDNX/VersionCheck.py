@@ -15,6 +15,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+from helpers.appium_locators import Toolbar_Locators
+from appium.webdriver.common.appiumby import AppiumBy
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
 
@@ -87,12 +93,11 @@ LABEL_VERSION = lambda v: (
 # Hilfsfunktionen mithilfe der Helper-Klassen
 # --------------------------------------------------------------------------- #
 
-def prepare_gui() -> None:
-    """Bringt HiDrive in den Vordergrund & öffnet Einstellungsfenster via Klicks."""
-    time.sleep(GuiCoordinates.CLICK_PAUSE)
-    pyautogui.click(*GuiCoordinates.SETTINGS_ITEM)
-    time.sleep(GuiCoordinates.CLICK_PAUSE)
-
+def prepare_gui(driver) -> None:
+    sel = f'//*[@title="{Toolbar_Locators.MENU_SETTINGS.title}" or @name="{Toolbar_Locators.MENU_SETTINGS.title}"]'
+    btn = WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, sel)))
+    driver.execute_script("macos: click", {"elementId": btn.id})
+    print("✅  'Settings' geklickt")
 
 def start_appium_session():
     opts = Capabilities.get_options()
@@ -125,9 +130,10 @@ def main():
     print("\n" + "═" * 50)
     print("🚀 STARTING VERSION CHECK 🚀".center(50))
     print("═" * 50)
-
-    prepare_gui()
+    
     driver = start_appium_session()
+    prepare_gui(driver)
+    
     try:
         verify_app_version(driver)          # Test 1
         print("✅ All tests passed")
