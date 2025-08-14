@@ -137,6 +137,12 @@ The `.env` must exist at the root level. If not set, the version check test will
 ---
 ## 🌟 e2e Test Execution
 
+**Start the Appium server** (if it isn’t already running):
+
+   ```bash
+   appium
+   ```
+
 Run all tests:
 ```bash
 ./run_all.sh
