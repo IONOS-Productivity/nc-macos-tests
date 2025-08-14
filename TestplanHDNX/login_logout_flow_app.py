@@ -47,15 +47,19 @@ def run_appium_flow():
     print("🚀  NATIVE APP LOGIN STEP STARTED  🚀".center(44))
     print("═" * 44)
 
-    pyautogui.click(3073, 12)
-    time.sleep(0.3)
-
+    # 🔌 Appium-Session starten
     caps   = Capabilities.get_options()
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
     wait = WebDriverWait(driver, WAIT_SEC)
 
-    # Exakt den Button "Log in" klicken – kein Button[1] mehr
+    # 🟡 Status-Icon (Menüleisten-Item) anklicken
+    status_sel = "//XCUIElementTypeStatusItem"
+    status_item = wait.until(EC.element_to_be_clickable((By.XPATH, status_sel)))
+    driver.execute_script("macos: click", {"elementId": status_item.id})
+    time.sleep(0.3)
+
+    # ✅ Exakt den Button "Log in" klicken
     sel = "//XCUIElementTypeButton[@title='Log in' or @name='Log in']"
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, sel)))
     driver.execute_script("macos: click", {"elementId": btn.id})
@@ -63,6 +67,7 @@ def run_appium_flow():
 
     driver.quit()
     print("🛑  Appium session closed")
+
 
 
 
