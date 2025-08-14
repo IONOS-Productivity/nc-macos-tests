@@ -20,6 +20,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from helpers.gui_coordinates import GuiCoordinates
+from TestplanHDNX.helpers.appium_locators import Toolbar_Locators, check_toolbar_labels
+
 
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
