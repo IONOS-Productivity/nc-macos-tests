@@ -179,3 +179,4 @@ def check_toolbar_labels(driver, timeout: float = 2.0) -> Dict[str, bool]:
         print(f"✅ {name}" if ok else f"❌ {name}")
 
     return {name: ok for name, ok in results}
+
