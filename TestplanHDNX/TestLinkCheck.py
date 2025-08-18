@@ -25,11 +25,19 @@ from TestplanHDNX.helpers.gui_coordinates import GuiCoordinates
 from TestplanHDNX.helpers.waits import Waits
 
 # XPath für den General-/Allgemein-Tab und Checkbox
-TAB_GENERAL     = '//XCUIElementTypeStaticText[@value="Allgemein" or @value="General"]'
+TAB_GENERAL      = '//XCUIElementTypeStaticText[@value="Allgemein" or @value="General"]'
 CHECKBOX_GENERAL = '//XCUIElementTypeCheckBox[@label="General" and @value="0"]'
+
+# ➕ Neu (vom User vorgegeben): Checkbox + Dialog-Button nach den 4 Link-Checks
+CHECKBOX = '(//XCUIElementTypeCheckBox[contains(@label,"@storage.ionos.fr")])[1]'
+DIALOG_BUTTON = '//XCUIElementTypeDialog/XCUIElementTypeGroup/XCUIElementTypeButton'
+FINAL_EXPECTED_URL = 'https://www.ionos.fr/solutions-bureau/hidrive-stockage-en-ligne'
 
 # Zu prüfende Links: (XPath, erwartete URL, Label)
 LINKS = [
+    ('//XCUIElementTypeStaticText[@value="More Information"]',
+     'https://www.ionos.fr/assistance/stockage-cloud/hidrive-next/',
+     'More Information'),
     ('//XCUIElementTypeStaticText[@value="Legal Notice"]',
      'https://www.ionos.fr/apropos',
      'Legal Notice'),
@@ -81,7 +89,6 @@ class LinkChecker:
         time.sleep(GuiCoordinates.CLICK_PAUSE)
 
     def click_and_verify(self, xpath: str, expected_url: str, label: str) -> None:
-        # Direktes Finden und Klicken ohne Warte-Wrapper
         elem = self.driver.find_element(By.XPATH, xpath)
         elem.click()
         print(f"  ✅ '{label}' clicked")
@@ -93,7 +100,6 @@ class LinkChecker:
             print(f"    ✅ {label}: URL correct ({url})")
         else:
             print(f"    ⚠️ {label}: unexpected URL {url!r} (expected {expected_url})")
-        # App wieder in den Vordergrund holen
         self.prepare_app()
 
     def run(self) -> None:
@@ -106,23 +112,55 @@ class LinkChecker:
         # App vorbereiten und Settings öffnen
         self.prepare_app()
 
-        # Spezifische Checkbox 'General' anklicken
+        # Spezifische Checkbox 'General' anklicken (optional vorhanden)
         try:
             checkbox = self.driver.find_element(By.XPATH, CHECKBOX_GENERAL)
             checkbox.click()
             print("  ✅ 'General' checkbox clicked")
-            time.sleep(1)
+            time.sleep(0.8)
         except NoSuchElementException:
             print("  ⚠️ 'General' checkbox not found, skipping")
 
-        # Alle Links prüfen
+        # 1) Die 4 Links prüfen
         for xpath, expected, label in LINKS:
             try:
                 self.click_and_verify(xpath, expected, label)
             except Exception as e:
                 print(f"  ⚠️ Error clicking '{label}': {e}")
 
-        print("\n🎉 All links verified successfully\n")
+        # 2) Danach: die zusätzliche Checkbox klicken
+        try:
+            target_checkbox = self.driver.find_element(By.XPATH, CHECKBOX)
+            target_checkbox.click()
+            print("  ✅ '@storage.ionos.fr' checkbox clicked")
+            time.sleep(0.6)
+        except NoSuchElementException:
+            print("  ❌ Target checkbox not found: " + CHECKBOX)
+            return
+
+        # 3) Und den Dialog-Button klicken, der zu weiterer URL führt
+        try:
+            dialog_btn = self.driver.find_element(By.XPATH, DIALOG_BUTTON)
+            dialog_btn.click()
+            print("  ✅ Dialog button clicked")
+        except NoSuchElementException:
+            print("  ❌ Dialog button not found: " + DIALOG_BUTTON)
+            return
+
+        # 4) URL prüfen
+        print("    ⏳ waiting for browser window (final URL)…")
+        final_url = get_frontmost_browser_url()
+        if not final_url:
+            print("    ❗ No browser URL detected for final step")
+        elif final_url.startswith(FINAL_EXPECTED_URL):
+            print(f"    ✅ Final link OK: {final_url}")
+        else:
+            print(f"    ⚠️ Final link mismatch: {final_url!r} (expected {FINAL_EXPECTED_URL})")
+
+        # App wieder in den Vordergrund holen
+        self.prepare_app()
+
+        print("\n🎉 All links + final checkbox/dialog flow verified\n")
 
 
 def main():
