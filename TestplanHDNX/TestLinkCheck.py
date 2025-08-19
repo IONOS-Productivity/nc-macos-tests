@@ -16,6 +16,9 @@ from urllib3.exceptions import NotOpenSSLWarning
 
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 # NEW: HTTP status checking
 try:
     import requests
@@ -171,8 +174,21 @@ class LinkChecker:
         self.lang = 'DE'  # gesetzt in run()
 
     def prepare_app(self):
-        """HiDrive-Next per Dock-Klick in den Vordergrund holen und Einstellungen öffnen"""
-        pyautogui.click(*GuiCoordinates.MENU_ICON)
+        """HiDrive-Next per Status-Icon in den Vordergrund holen und Einstellungen öffnen"""
+        logger.debug("Preparing GUI: opening HiDrive Next settings")
+
+        # --- REPLACEMENT: PyAutoGUI MENU_ICON -> Appium Klick auf Status-Icon ---
+        sel_status = "//XCUIElementTypeStatusItem"
+        status_item = self.waits.until_clickable(By.XPATH, sel_status)
+        try:
+            # Robuster Klick für Menüleisten-Items
+            self.driver.execute_script("macos: click", {"elementId": status_item.id})
+        except Exception:
+            # Fallback, falls normaler Klick reicht
+            status_item.click()
+        logger.info("✅ Status-Icon geklickt (via Appium)")
+        # -------------------------------------------------------------------------
+
         time.sleep(GuiCoordinates.CLICK_PAUSE)
         pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
         time.sleep(GuiCoordinates.CLICK_PAUSE)

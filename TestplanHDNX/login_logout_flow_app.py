@@ -41,24 +41,39 @@ from TestplanHDNX.capabilities import Capabilities
 
 def run_appium_flow():
     """
-    1) Native HiDrive Next starten & Login-Button klicken via Appium & PyAutoGUI
+    1) Native HiDrive Next starten & Login-Button klicken via Appium
     """
     print("\n" + "═" * 44)
     print("🚀  NATIVE APP LOGIN STEP STARTED  🚀".center(44))
     print("═" * 44)
 
-    pyautogui.click(3073, 12)
-    time.sleep(0.3)
-
+    # Appium-Session starten
     caps   = Capabilities.get_options()
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
 
+    # Status-Icon (Menüleisten-Item) klicken – ersetzt den PyAutoGUI-Koordinatenklick
+    status_sel = "//XCUIElementTypeStatusItem"
+    try:
+        status_item = WebDriverWait(driver, WAIT_SEC).until(
+            EC.element_to_be_clickable((By.XPATH, status_sel))
+        )
+        try:
+            driver.execute_script("macos: click", {"elementId": status_item.id})
+        except Exception:
+            status_item.click()
+    except Exception as e:
+        print(f"⚠️  Status-Icon nicht klickbar: {e}")
+
+    time.sleep(0.3)
+
+    # Danach wie gehabt den Login-Button klicken
     driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]").click()
     print("✅  Native login button clicked")
 
     driver.quit()
     print("🛑  Appium session closed")
+
 
 
 def run_selenium_flow():

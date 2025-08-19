@@ -41,14 +41,42 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # --------------------------------------------------------------------------- #
-# PyAutoGUI Actions
+# PyAutoGUI / Appium Actions
 # --------------------------------------------------------------------------- #
 class GuiActions:
     @staticmethod
     def prepare_gui() -> None:
         """Brings HiDrive Next to front and opens settings via menu icons."""
         logger.debug("Preparing GUI: opening HiDrive Next settings")
-        pyautogui.click(*GuiCoordinates.MENU_ICON)
+
+        # --- REPLACED: MENU_ICON (PyAutoGUI) -> Appium Klick auf Status-Icon ---
+        tmp_driver = None
+        try:
+            opts = Capabilities.get_options()
+            tmp_driver = webdriver.Remote("http://localhost:4723", options=opts)
+            tmp_driver.implicitly_wait(10)
+
+            waits = Waits(tmp_driver, 10)
+            sel_status = "//XCUIElementTypeStatusItem"
+            status_item = waits.until_clickable(By.XPATH, sel_status)
+
+            # Für Menüleisten-Items ist der direkte macOS-Click robuster:
+            try:
+                tmp_driver.execute_script("macos: click", {"elementId": status_item.id})
+            except Exception:
+                # Fallback, falls W3C-Klick reicht
+                status_item.click()
+
+            logger.info("✅ Status-Icon geklickt (via Appium)")
+        finally:
+            if tmp_driver:
+                try:
+                    tmp_driver.quit()
+                    logger.debug("🛑 Temporäre Appium-Session geschlossen (Status-Icon)")
+                except Exception:
+                    pass
+        # ---------------------------------------------------------------------
+
         time.sleep(GuiCoordinates.CLICK_PAUSE)
         pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
         time.sleep(GuiCoordinates.CLICK_PAUSE)
