@@ -1,10 +1,3 @@
-
-"""
-End-to-end Test für Login & Logout mit Appium (native) und Selenium (Web),
-inklusive extra Klicks auf den "Anmelden"-Button im WebView, SSO-Grant
-und dann Ordner-Auswahl im nativen HiDrive-Client.
-"""
-
 import sys
 import time
 import json
@@ -22,9 +15,7 @@ from helpers.gui_coordinates import GuiCoordinates
 
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
-
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
-
 
 # Pfade & Config
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -41,10 +32,119 @@ from TestplanHDNX.capabilities import Capabilities
 from helpers.menu_helper import MenuHelper
 
 
+def _attach_to_debug_chrome(timeout_sec: int = 15):
+    from selenium import webdriver as selenium_webdriver
+
+    start = time.time()
+    last_err = None
+    while time.time() - start < timeout_sec:
+        try:
+            chrome_opts = selenium_webdriver.ChromeOptions()
+            chrome_opts.debugger_address = f"localhost:{DEBUG_PORT}"
+            driver = selenium_webdriver.Chrome(options=chrome_opts)
+            wait   = WebDriverWait(driver, WAIT_SEC)
+            return driver, wait
+        except Exception as e:
+            last_err = e
+            time.sleep(0.25)
+    raise RuntimeError(f"Kann nicht an Chrome auf Port {DEBUG_PORT} attachen: {last_err}")
+
+def run_selenium_open_debug_first():
+    print("\n" + "═" * 44)
+    print("🟦  OPEN CHROME DEBUG (FIRST)  🟦".center(44))
+    print("═" * 44)
+
+    # a) alle Chrome-Prozesse killen
+    subprocess.run(["killall", "Google Chrome"], stderr=subprocess.DEVNULL)
+
+    # b) neue Chrome-Instanz mit Debug-Profil öffnen
+    debug_profile = PROJECT_ROOT / "chrome-debug-profile"
+    subprocess.Popen([
+        "open", "-n", "-a", "Google Chrome",
+        "--args",
+        f"--remote-debugging-port={DEBUG_PORT}",
+        f"--user-data-dir={debug_profile}",
+        "--no-first-run",
+        "--no-default-browser-check"
+    ])
+    print("🚀  Chrome restarted with remote debugging (first)")
+    time.sleep(5)
+
+    # c) an Debug-Chrome anhängen
+    driver, _ = _attach_to_debug_chrome(timeout_sec=15)
+    try:
+        handles = driver.window_handles
+        if handles:
+            driver.switch_to.window(handles[-1])
+            print(f"🔀  Attached to initial window: {handles[-1]}")
+        else:
+            # Fallback: Fenster via AppleScript erzeugen
+            try:
+                subprocess.run([
+                    "osascript", "-e",
+                    'tell application "Google Chrome" to make new window'
+                ], check=True)
+                subprocess.run(["osascript", "-e", 'tell application "Google Chrome" to activate'], check=True)
+                print("🪟  New Chrome window created via AppleScript")
+            except Exception:
+                print("⚠️  Konnte kein Fenster erzeugen; Chrome bleibt dennoch offen.")
+    finally:
+        # NUR DevTools-Verbindung schließen (Chrome offen lassen)
+        driver.quit()
+        print("🛑  Initial attach closed (Chrome stays open)")
+
+
+def run_selenium_bootstrap_window():
+    print("\n" + "═" * 44)
+    print("🟩  BOOTSTRAP ATTACH & CLEAR COOKIES  🟩".center(44))
+    print("═" * 44)
+
+    driver, _ = _attach_to_debug_chrome(timeout_sec=15)
+    try:
+        handles = driver.window_handles
+        if not handles:
+            raise RuntimeError("Kein vorhandenes Chrome-Fenster. Schritt 0 zuerst ausführen!")
+        driver.switch_to.window(handles[-1])
+        print(f"🔀  Using existing window: {handles[-1]}")
+
+        # Globale Cookie-Löschung (schnell, ohne Domain-Navigation)
+        try:
+            driver.execute_cdp_cmd("Network.enable", {})
+        except Exception:
+            pass
+        try:
+            driver.execute_cdp_cmd("Network.clearBrowserCookies", {})
+            print("🧹  Cleared ALL cookies via CDP")
+        except Exception as e:
+            print(f"⚠️  clearBrowserCookies failed ({e}); versuche Fallback …")
+            try:
+                cookies = driver.execute_cdp_cmd("Network.getAllCookies", {})
+                count = 0
+                for c in cookies.get("cookies", []):
+                    params = {"name": c.get("name", "")}
+                    if c.get("domain"):
+                        params["domain"] = c.get("domain")
+                    if c.get("path"):
+                        params["path"] = c.get("path")
+                    try:
+                        driver.execute_cdp_cmd("Network.deleteCookies", params)
+                        count += 1
+                    except Exception:
+                        pass
+                print(f"🧹  Deleted {count} cookies via fallback")
+            except Exception as e2:
+                print(f"🔴  Fallback deletion failed: {e2}")
+    finally:
+        # Nur DevTools-Verbindung schließen – Chrome bleibt offen
+        driver.quit()
+        print("🛑  Bootstrap Selenium session closed (Chrome stays open)")
+
+
+# ======================================================
+# 1) Appium: Native Login-Button klicken
+# ======================================================
+
 def run_appium_flow():
-    """
-    1) Native HiDrive Next starten & Login-Button klicken via Appium
-    """
     print("\n" + "═" * 44)
     print("🚀  NATIVE APP LOGIN STEP STARTED  🚀".center(44))
     print("═" * 44)
@@ -66,11 +166,11 @@ def run_appium_flow():
     print("🛑  Appium session closed")
 
 
+# ======================================================
+# 2) Web-SSO-Login via Chrome Remote-Debugging 
+# ======================================================
 
 def run_selenium_flow():
-    """
-    2) Web-SSO-Login durchführen via Chrome Remote-Debugging
-    """
     print("\n" + "═" * 44)
     print("🔷  WEB SSO LOGIN STEP STARTED  🔷".center(44))
     print("═" * 44)
@@ -160,10 +260,11 @@ def run_selenium_flow():
         print("🛑  Selenium session closed")
 
 
+# ======================================================
+# 3) Ordner-Auswahl im nativen HiDrive-Client
+# ======================================================
+
 def run_appium_folder_selection():
-    """
-    3) Ordner-Auswahl im nativen HiDrive-Client durchführen
-    """
     print("\n" + "═" * 44)
     print("📁  FOLDER SELECTION STEP STARTED  📁".center(44))
     print("═" * 44)
@@ -172,11 +273,9 @@ def run_appium_folder_selection():
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
 
-    # App aktivieren oder starten – ausgelagert
     MenuHelper.activate_or_launch_app(driver, "com.ionos.hidrivenext.desktopclient")
     time.sleep(0.5)
 
-    # Ersten Button im aktiven Fenster klicken – ausgelagert
     MenuHelper.click_first_window_button(driver, WAIT_SEC, index=1)
     print("✅  Folder selection button clicked")
 
@@ -184,13 +283,22 @@ def run_appium_folder_selection():
     print("🛑  Appium session closed (folder selection)")
 
 
+# ======================================================
+# Main
+# ======================================================
 if __name__ == "__main__":
     print("\n" + "═" * 44)
     print("🚀  LOGIN TEST FLOW STARTED  🚀".center(44))
     print("═" * 44)
 
+    run_selenium_open_debug_first()
+
+    run_selenium_bootstrap_window()
+
     run_appium_flow()
+
     run_selenium_flow()
+
     run_appium_folder_selection()
 
     print("\n" + "═" * 44)
