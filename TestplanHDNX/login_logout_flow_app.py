@@ -1,4 +1,3 @@
-# /Users/hidriveqa/Desktop/Appium-Auto-HDNX/nc-macos-tests/TestplanHDNX/login_logout_flow_app.py
 
 """
 End-to-end Test für Login & Logout mit Appium (native) und Selenium (Web),
@@ -38,6 +37,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from TestplanHDNX.capabilities import Capabilities
 
+# 👉 Helper importieren
+from helpers.menu_helper import MenuHelper
+
 
 def run_appium_flow():
     """
@@ -52,23 +54,12 @@ def run_appium_flow():
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
 
-    # Status-Icon (Menüleisten-Item) klicken – ersetzt den PyAutoGUI-Koordinatenklick
-    status_sel = "//XCUIElementTypeStatusItem"
-    try:
-        status_item = WebDriverWait(driver, WAIT_SEC).until(
-            EC.element_to_be_clickable((By.XPATH, status_sel))
-        )
-        try:
-            driver.execute_script("macos: click", {"elementId": status_item.id})
-        except Exception:
-            status_item.click()
-    except Exception as e:
-        print(f"⚠️  Status-Icon nicht klickbar: {e}")
-
+    # Status-Icon (Menüleisten-Item) klicken – ausgelagert in Helper
+    MenuHelper.click_status_icon(driver, WAIT_SEC)
     time.sleep(0.3)
 
-    # Danach wie gehabt den Login-Button klicken
-    driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]").click()
+    # Danach wie gehabt den Login-Button klicken – über Helper (Index=1)
+    MenuHelper.click_first_window_button(driver, WAIT_SEC, index=1)
     print("✅  Native login button clicked")
 
     driver.quit()
@@ -181,20 +172,12 @@ def run_appium_folder_selection():
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
 
-    try:
-        driver.execute_script(
-            "macos: activateApp",
-            {"bundleId": "com.ionos.hidrivenext.desktopclient"}
-        )
-    except Exception:
-        driver.execute_script(
-            "macos: launchApp",
-            {"bundleId": "com.ionos.hidrivenext.desktopclient"}
-        )
+    # App aktivieren oder starten – ausgelagert
+    MenuHelper.activate_or_launch_app(driver, "com.ionos.hidrivenext.desktopclient")
     time.sleep(0.5)
 
-    el = driver.find_element(By.XPATH, "//XCUIElementTypeWindow/XCUIElementTypeButton[1]")
-    driver.execute_script("macos: click", {"elementId": el.id})
+    # Ersten Button im aktiven Fenster klicken – ausgelagert
+    MenuHelper.click_first_window_button(driver, WAIT_SEC, index=1)
     print("✅  Folder selection button clicked")
 
     driver.quit()
