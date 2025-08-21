@@ -297,12 +297,6 @@ def run_native_logout():
     caps   = Capabilities.get_options()
     driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
     driver.implicitly_wait(WAIT_SEC)
-    try:
-        MenuHelper.click_status_icon(driver, WAIT_SEC)
-        print("✅ Menü-Icon per Helper (XPath) geklickt")
-    finally:
-        driver.quit()
-        print("🛑 Appium session closed (logout prep)")
 
     # 2) Rest wie gehabt mit PyAutoGUI
     time.sleep(GuiCoordinates.CLICK_PAUSE)
