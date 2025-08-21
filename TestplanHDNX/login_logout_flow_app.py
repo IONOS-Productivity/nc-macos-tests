@@ -171,6 +171,7 @@ def run_appium_flow():
 # ======================================================
 
 def run_selenium_flow():
+
     print("\n" + "═" * 44)
     print("🔷  WEB SSO LOGIN STEP STARTED  🔷".center(44))
     print("═" * 44)
@@ -281,6 +282,42 @@ def run_appium_folder_selection():
 
     driver.quit()
     print("🛑  Appium session closed (folder selection)")
+
+
+def run_native_logout():
+    """
+    Erster Klick auf das Menü-Icon per Appium/XPath (MenuHelper.click_status_icon),
+    danach Logout-Schritte wie gehabt via PyAutoGUI.
+    """
+    print("\n" + "═" * 44)
+    print("🔻  NATIVE LOGOUT STARTED  🔻".center(44))
+    print("═" * 44)
+
+    # 1) Menü-Icon NICHT mehr per Koordinaten, sondern via Helper (XPath, macos: click)
+    caps   = Capabilities.get_options()
+    driver = appium_webdriver.Remote("http://localhost:4723", options=caps)
+    driver.implicitly_wait(WAIT_SEC)
+    try:
+        MenuHelper.click_status_icon(driver, WAIT_SEC)
+        print("✅ Menü-Icon per Helper (XPath) geklickt")
+    finally:
+        driver.quit()
+        print("🛑 Appium session closed (logout prep)")
+
+    # 2) Rest wie gehabt mit PyAutoGUI
+    time.sleep(GuiCoordinates.CLICK_PAUSE)
+    print("▶️ Starte native Logout-Schritte...")
+    time.sleep(3)
+    # Benutzer anklicken
+    pyautogui.click(*GuiCoordinates.USER_DROPDOWN)
+    time.sleep(GuiCoordinates.CLICK_PAUSE)
+    pyautogui.click(*GuiCoordinates.USER_SELF_ITEM)
+
+    time.sleep(0.3)
+    # Profil abmelden (deine bestehende Position bleibt unverändert)
+    pyautogui.click(3169, 204)
+
+    print("✅ Native Logout abgeschlossen")
 
 
 # ======================================================
