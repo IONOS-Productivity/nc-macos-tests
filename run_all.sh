@@ -18,6 +18,8 @@ SCRIPTS=(
   "$BASE_DIR/nc-macos-tests/TestplanHDNX/VersionCheck.py"
   "$BASE_DIR/nc-macos-tests/TestplanHDNX/test_settings_quota_display_check.py"
   "$BASE_DIR/nc-macos-tests/TestplanHDNX/TestLinkCheck.py"
+  "$BASE_DIR/nc-macos-tests/TestplanHDNX/test_general_settings.py"
+  "$BASE_DIR/nc-macos-tests/TestplanHDNX/test_add_new_account.py"
   "$BASE_DIR/nc-macos-tests/TestplanHDNX/logout_only.py"
 
 )

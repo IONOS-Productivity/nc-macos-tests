@@ -4,8 +4,10 @@ class GuiCoordinates:
     """Zentrale Koordinaten für GUI-Interaktionen mit PyAutoGUI"""
     MENU_ICON = (3073, 12)
     USER_DROPDOWN = (2860, 86)
-    SETTINGS_ITEM = (2865, 289)
+    SETTINGS_ITEM = (2865, 300)
     CLICK_PAUSE = .3
     LOGOUT_ITEM = (3169, 204)
     USER_SELF_ITEM = (3076, 175)
+    ADD_ACCOUNT_BUTTON = (3073, 230)
+    SETTINGS_ITEM_2_ACCOUNTS = (2875, 350)
 
