@@ -81,6 +81,23 @@ appium
 ---
 ## 📝 Maintainer Notes
 
+> **Note:**  
+> If the Appium Server (either the Inspector or the test scripts) becomes unresponsive, it might be due to an outdated version.  
+> You can update Appium to the latest version by running:  
+> ```bash
+> npm install --location=global appium@latest
+> ```
+
+> **Tip**
+> For stable e2e runs, clear browser cookies/storage at **test start** so the SSO flow always begins unauthenticated.
+> • Alternatively, launch the browser with a **fresh temporary profile** for each run.
+
+> **Sign‑out at Test Start**
+> Start each test run **signed out** to prevent a leftover session from triggering an “Allow access” / consent window because you were already logged in.
+> • **Web (SSO):** clear cookies & site data or launch with a **fresh temporary profile** / private window.
+> • **HiDrive Next (native):** sign out via *Settings → Account → Sign Out* before running.
+> This ensures the SSO flow begins unauthenticated and avoids stalls on permission dialogs.
+
 ### 📊 `.env` – Environment Configuration
 
 The `.env` file is **required** to define the expected version of the HiDrive Next app for test validation.
@@ -119,6 +136,12 @@ The `.env` must exist at the root level. If not set, the version check test will
 
 ---
 ## 🌟 e2e Test Execution
+
+**Start the Appium server** (if it isn’t already running):
+
+   ```bash
+   appium
+   ```
 
 Run all tests:
 ```bash
